@@ -25,58 +25,58 @@ final class TripleTagSet extends AbstractSet
      * @param TripleTagSet
      * @return array
      */
-    public static function calculateTransformations(TripleTagSet $oldSet = null,
-            TripleTagSet $newSet = null)
-    {
-        $transformations = array('keep'   => array(),
-                                 'add'    => array(),
-                                 'delete' => array());
+    public static function calculateTransformations(
+        TripleTagSet $oldSet = null,
+        TripleTagSet $newSet = null
+    ) {
+        $transformations = array(
+            'keep'   => array(),
+            'add'    => array(),
+            'delete' => array()
+        );
 
-        if ($oldSet === null && $newSet === null) {
+        if (null === $oldSet && null === $newSet) {
             return $transformations;
-        } else if ($oldSet === null) {
+        }
+
+        if (null === $oldSet) {
             foreach ($newSet as $newTag) {
                 $transformations['add'][] = $newTag;
             }
+
             return $transformations;
-        } else if ($newSet === null) {
+        }
+
+        if (null === $newSet) {
             foreach ($oldSet as $oldTag) {
                 $transformations['delete'][] = $oldTag;
             }
+
             return $transformations;
         }
 
         foreach ($newSet as $newTag) {
-            $found = false;
             foreach ($oldSet as $oldTag) {
                 if ($newTag->equals($oldTag)) {
-                    $found = true;
-                    break;
+                    // Tags in ($newSet AND $oldSet)
+                    $transformations['keep'][] = $newTag;
+                    continue 2;
                 }
             }
 
-            if ($found) {
-                // Tags in ($newSet AND $oldSet)
-                $transformations['keep'][] = $newTag;
-            } else {
-                // Tags in ($newSet AND NOT $oldSet)
-                $transformations['add'][] = $newTag;
-            }
+            // Tags in ($newSet AND NOT $oldSet)
+            $transformations['add'][] = $newTag;
         }
 
         foreach ($oldSet as $oldTag) {
-            $found = false;
             foreach ($newSet as $newTag) {
                 if ($oldTag->equals($newTag)) {
-                    $found = true;
-                    break;
+                    continue 2;
                 }
             }
 
-            if (!$found) {
-                // Tags in ($oldSet AND NOT $newSet)
-                $transformations['delete'][] = $oldTag;
-            }
+            // Tags in ($oldSet AND NOT $newSet)
+            $transformations['delete'][] = $oldTag;
         }
 
         return $transformations;
@@ -87,7 +87,7 @@ final class TripleTagSet extends AbstractSet
      * with namespace/predicate/value entries
      *
      * @param  string $s string of triple tags
-     * @return array  array of TripleTag
+     * @return TripleTagSet array of TripleTag
      */
     public static function convertStringToTagSet($s)
     {
@@ -101,16 +101,18 @@ final class TripleTagSet extends AbstractSet
 
             $t = trim($t);
             if ('' !== $t) {
-                if (strpos($t, ':') !== false) {
+                if (false !== strpos($t, ':')) {
                     $parts = explode(':', $t, 2);
                     $newTag->setNamespace($parts[0]);
                     $t = $parts[1];
                 }
-                if (strpos($t, '=') !== false) {
+
+                if (false !== strpos($t, '=')) {
                     $parts = explode('=', $t, 2);
                     $newTag->setPredicate($parts[0]);
                     $t = $parts[1];
                 }
+
                 $newTag->setValue($t);
 
                 $tags->add($newTag);
@@ -120,6 +122,11 @@ final class TripleTagSet extends AbstractSet
         return $tags;
     }
 
+    /**
+     *
+     * @param array $tags
+     * @return TripleTagSet
+     */
     public static function convertArrayToTagSet(array $tags)
     {
         $tagSet = new TripleTagSet();
