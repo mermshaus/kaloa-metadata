@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the kaloa/metadata package.
+ *
+ * For full copyright and license information, please view the LICENSE file
+ * that was distributed with this source code.
+ */
+
 namespace Kaloa\Metadata;
 
 use Kaloa\Metadata\TripleTag;
@@ -8,9 +15,9 @@ use Kaloa\Util\AbstractSet;
 /**
  *
  */
-class TripleTagSet extends AbstractSet
+final class TripleTagSet extends AbstractSet
 {
-    protected $_managedClass = '\\Kaloa\\Metadata\\TripleTag';
+    protected $_managedClass = 'Kaloa\\Metadata\\TripleTag';
 
     /**
      *

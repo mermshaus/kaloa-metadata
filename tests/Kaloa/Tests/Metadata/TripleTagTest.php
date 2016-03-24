@@ -1,9 +1,16 @@
 <?php
 
+/*
+ * This file is part of the kaloa/metadata package.
+ *
+ * For full copyright and license information, please view the LICENSE file
+ * that was distributed with this source code.
+ */
+
 namespace Kaloa\Tests\Metadata;
 
-use PHPUnit_Framework_TestCase;
 use Kaloa\Metadata\TripleTag;
+use PHPUnit_Framework_TestCase;
 
 class TripleTagTest extends PHPUnit_Framework_TestCase
 {
